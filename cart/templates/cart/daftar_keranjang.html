@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>web belanja</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #f4f4f4; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .btn { padding: 10px 15px; text-decoration: none; color: white; background-color: #007bff; border-radius: 5px; }
+        .btn-danger { background-color: #dc3545; }
+        .btn-success { background-color: #28a745; }
+    </style>
+</head>
+<body>
+    <h1>Daftar Keranjang</h1>
+    <a href="{% url 'tambah_keranjang' %}" class="btn">Tambah Item</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Nama Barang</th>
+                <th>Kuantitas</th>
+                <th>Harga</th>
+                <th>Total Harga</th>
+                <th>Opsi</th>
+                <th>gambar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for keranjang in keranjangs %}
+                <tr>
+                    <td>{{ keranjang.nama_barang }}</td>
+                    <td>{{ keranjang.kuantitas }}</td>
+                    <td>{{ keranjang.harga }}</td>
+                    <td>{{ keranjang.total_harga }}</td>
+                    <td>
+                        <a href="{% url 'edit_keranjang' keranjang.pk %}" class="btn">Edit</a>
+                        <a href="{% url 'hapus_keranjang' keranjang.pk %}" class="btn btn-danger">Hapus</a>
+                    </td>
+                    <td>
+                        <img src="/media/{{ item.image }}" width="100px" alt="">
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6">Tidak ada item dalam keranjang.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
