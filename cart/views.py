@@ -6,7 +6,8 @@ import datetime
 
 def daftar_keranjang(request):
     keranjang = Keranjang.objects.all()
-    return render(request, 'cart/daftar_keranjang.html', {'keranjang': keranjang})
+    print(keranjang)
+    return render(request, 'cart/daftar_keranjang.html', {'keranjangs': keranjang})
 
 def tambah_keranjang(request):
     if request.method == 'POST':
