@@ -16,7 +16,7 @@
 </head>
 <body>
     <h1>Tambah Belanjaan</h1>
-    <form action="" method="post" enctype="multipart">
+    <form action="" method="post" enctype="multipart/form-data"> <!-- ubah enctype di sini -->
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Simpan</button>

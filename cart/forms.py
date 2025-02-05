@@ -4,7 +4,8 @@ from.models import image
 class KeranjangForm(forms.ModelForm):
     class Meta:
         model = Keranjang
-        fields = ['nama_barang', 'kuantitas', 'harga']
+        fields = ['nama_barang', 'kuantitas', 'harga', 'image']  
+
 class ImageForm(forms.ModelForm):
     class Meta:
         model=image

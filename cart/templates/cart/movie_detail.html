@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ movie.title }} - Detail Film</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Slick Carousel CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick-theme.css"/>
+</head>
+<body class="bg-gray-900 text-white font-roboto">
+
+    <header class="bg-blue-900 p-4 flex items-center justify-between">
+        <div class="text-3xl font-bold">efran movie</div>
+        <nav class="space-x-4">
+            <a class="hover:underline" href="{% url 'halaman_efan' %}">Home</a>
+            <a class="hover:underline" href="#">Movies</a>
+            <a class="hover:underline" href="#">TV Shows</a>
+            <a class="hover:underline" href="#">People</a>
+            <a class="hover:underline" href="#">More</a>
+        </nav>
+    </header>
+
+    <main class="p-8">
+        <!-- Movie Details Section -->
+        <section class="flex flex-col md:flex-row items-start space-x-8 bg-gradient-to-r from-gray-800 to-transparent p-6 rounded-lg">
+            <!-- Movie Poster -->
+            <div class="w-full md:w-1/3">
+                <img class="w-full h-auto object-cover rounded-lg" src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
+            </div>
+
+            <!-- Movie Information -->
+            <div class="flex-1 space-y-4">
+                <!-- Judul Film -->
+                <h1 class="text-4xl font-bold">{{ movie.title }}</h1>
+
+                <!-- Tanggal Rilis -->
+                <p class="text-lg text-gray-400">Release Date: {{ movie.release_date }}</p>
+
+                <!-- Overview -->
+                <h3 class="text-2xl font-semibold mt-4">Overview</h3>
+                <p class="text-gray-300">{{ movie.overview }}</p>
+
+                <!-- Apakah film bagian dari koleksi -->
+                {% if movie.belongs_to_collection %}
+                <p class="text-lg text-teal-400 mt-4">Bagian dari koleksi: {{ movie.belongs_to_collection.name }}</p>
+                {% endif %}
+
+                <!-- Informasi Tambahan -->
+                <div class="mt-4 space-y-2">
+                    <p>Asal Negara: {{ movie.production_countries.0.name }}</p>
+                    <p>Bahasa Asli: {{ movie.spoken_languages.0.name }}</p>
+                    <p>Durasi: {{ movie.runtime }} menit</p>
+                    <p>Perusahaan Produksi:</p>
+                    <ul class="list-disc list-inside">
+                        {% for company in movie.production_companies %}
+                            <li>{{ company.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="flex space-x-4 mt-4">
+                    <span class="text-teal-400">Rating: {{ movie.vote_average }}/10</span>
+                    <span class="text-teal-400">Votes: {{ movie.vote_count }}</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cast Section (Di bawah gambar film) -->
+        <section class="mt-8">
+            <h2 class="text-2xl font-bold text-center">Cast:</h2>
+            <div class="cast-carousel mt-4">
+                {% for actor in cast %}
+                    <div class="p-1 text-center">
+                        {% if actor.profile_path %}
+                            <img class="rounded-lg w-24 h-36 object-cover" src="https://image.tmdb.org/t/p/w200{{ actor.profile_path }}" alt="{{ actor.name }}">
+                        {% else %}
+                            <img class="rounded-lg w-24 h-36 object-cover" src="https://via.placeholder.com/100x150?text=No+Image" alt="{{ actor.name }}">
+                        {% endif %}
+                        <p class="mt-1 text-sm">{{ actor.name }}</p>
+                        <p class="text-gray-400 text-xs">as {{ actor.character }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Navigation Links -->
+        <div class="mt-6 flex justify-center space-x-4">
+            <a href="{% url 'movie_detail' movie.id %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">View Details</a>
+            <a href="{% url 'halaman_efan' %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">Back to Search</a>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 p-4 text-center mt-8">
+        <p>&copy; 2024 efan movie - All Rights Reserved</p>
+    </footer>
+
+    <!-- jQuery and Slick Carousel -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.cast-carousel').slick({
+                infinite: true,
+                slidesToShow: 6,  // Tampilkan 6 pemeran sekaligus
+                slidesToScroll: 1,
+                arrows: true,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 4, // Pada ukuran layar sedang, tampilkan 4 pemeran
+                            slidesToScroll: 1
+                        }
+                    },
+                    {
+                        breakpoint: 600,
+                        settings: {
+                            slidesToShow: 3, // Pada ukuran layar kecil, tampilkan 3 pemeran
+                            slidesToScroll: 1
+                        }
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 2, // Pada layar sangat kecil, tampilkan 2 pemeran
+                            slidesToScroll: 1
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+</body>
+</html>
