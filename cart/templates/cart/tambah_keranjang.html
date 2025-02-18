@@ -16,11 +16,30 @@
 </head>
 <body>
     <h1>Tambah Belanjaan</h1>
-    <form action="" method="post" enctype="multipart/form-data"> <!-- ubah enctype di sini -->
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Simpan</button>
+        <p>
+            <label for="id_nama_barang">Nama barang:</label>
+            <input type="text" name="nama_barang" maxlength="100" required="" id="id_nama_barang">
+        </p>
+        
+        <p>
+            <label for="id_kuantitas">Kuantitas:</label>
+            <input type="number" name="kuantitas" min="0" required="" id="id_kuantitas">
+          </p>
+          
+          <p>
+            <label for="id_harga">Harga:</label>
+            <input type="number" name="harga" step="0.01" required="" id="id_harga">
+          </p>
+          
+          <p>
+            <label for="id_image">Image:</label>
+            <input type="file" name="file" id="id_image">
+          </p>      
+        <button type="submit">Tambah ke Keranjang</button>
     </form>
+    
     <a href="{% url 'daftar_keranjang' %}">Kembali</a>
 </body>
 </html>

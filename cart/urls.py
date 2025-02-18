@@ -7,6 +7,7 @@ from .views import movie_detail
 urlpatterns = [
     path('', views.daftar_keranjang, name='daftar_keranjang'),
     path('tambah/', views.tambah_keranjang, name='tambah_keranjang'),
+    path('tambah_sql/', views.tambah_keranjang_sql, name='tambah_keranjang_sql'),
     path('edit/<int:pk>/', views.edit_keranjang, name='edit_keranjang'),
     path('hapus/<int:pk>/', views.hapus_keranjang, name='hapus_keranjang'),
     path('halaman_baru/', views.halaman_baru, name='halaman_baru'),

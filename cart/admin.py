@@ -1,5 +1,5 @@
 from django.contrib import admin
-from.models import image
+from .models import Keranjang
 # Register your models here.
 
-admin.site.register(image)
+admin.site.register(Keranjang)

@@ -119,7 +119,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+MINIO_STORAGE_ENDPOINT = 'http://local-dev-minio-1:9000'
+MINIO_STORAGE_ACCESS_KEY = 'admin'
+MINIO_STORAGE_SECRET_KEY = 'miniosecret'
+MINIO_STORAGE_BUCKET_NAME = 'dalang-assets'
+MINIO_STORAGE_USE_SSL = True 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -136,9 +140,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
+STATIC_ROOT = f"{BASE_DIR}/static/"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

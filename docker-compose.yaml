@@ -1,0 +1,19 @@
+services:
+  belanja-app:
+    container_name: belanja-app
+    image: efran-kun:latest
+    environment:
+      SECRET_KEY: ayambakarenakuiugiuewducggiiwiwfbwcibwicwucvewyucwvyucuxwvzyuvwuvwyuxvvivw
+      DB_NAME: belanja
+      DB_HOST: local-dev-postgresql-1
+      DB_PORT: 5432
+      DB_USER: dalang
+      DB_PASSWORD:
+    ports:
+      - "8000:8000"
+    networks:
+      - shared-network
+
+networks:
+  shared-network:
+    external: true

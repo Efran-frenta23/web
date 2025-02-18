@@ -40,7 +40,7 @@
                         <a href="{% url 'hapus_keranjang' keranjang.pk %}" class="btn btn-danger">Hapus</a>
                     </td>
                     <td>
-                        <img src="/media/{{ keranjang.image }}" width="100px" alt=""> <!-- perbaiki bagian ini -->
+                        <img src="http://localhost:9001/api/v1/buckets/dalang-assets/objects/download?preview=true&prefix={{ keranjang.image }}&version_id=null" width="100px" alt=""> <!-- perbaiki bagian ini -->
                     </td>
                 </tr>
             {% empty %}

@@ -1,8 +1,36 @@
-from django.shortcuts import render, redirect, get_object_or_404
-import requests
+import boto3
+from django.conf import settings
 from .models import Keranjang
 from .forms import KeranjangForm
+from django.shortcuts import render, redirect, get_object_or_404
 import datetime
+import requests
+from django.db import connection
+
+# Minio client setup
+minio_client = boto3.client(
+    's3',
+    endpoint_url="http://localhost:9000",  # Ganti jika perlu
+    aws_access_key_id=settings.MINIO_STORAGE_ACCESS_KEY,
+    aws_secret_access_key=settings.MINIO_STORAGE_SECRET_KEY,
+    config=boto3.session.Config(signature_version='s3v4'),
+    region_name='us-east-1'
+)
+
+def upload_to_minio(file, bucket_name="dalang-assets"):
+    # Cek apakah bucket ada, jika tidak buat bucket
+    found = minio_client.bucket_exists(bucket_name)
+    if not found:
+        minio_client.make_bucket(bucket_name)
+
+    # Generate unique object name (optional) dan upload
+    object_name = f"{file.name}"
+    minio_client.put_object(
+        bucket_name, object_name, file, file.size,
+        content_type=file.content_type
+    )
+    return object_name
+
 
 def daftar_keranjang(request):
     keranjang = Keranjang.objects.all()
@@ -11,13 +39,57 @@ def daftar_keranjang(request):
 
 def tambah_keranjang(request):
     if request.method == 'POST':
-        form = KeranjangForm(request.POST, request.FILES)  
+        form = KeranjangForm(request.POST, request.FILES)
+        nama_barang = request.POST.get('nama_barang')
+        kuantitas =  request.POST.get('kuantitas')
+        harga = request.POST.get('harga')
+        file = request.FILES['file']
+        file_name = file.name
+        upload_response = minio_client.put_object(
+            Bucket=settings.MINIO_STORAGE_BUCKET_NAME,
+            Key=file_name,
+            Body=file,   
+            ContentType=file.content_type
+        )
+        print(upload_response)
         if form.is_valid():
-            form.save()
+            keranjang = form.save(commit=False)
+            keranjang.nama_barang = nama_barang
+            keranjang.kuantitas = float(kuantitas)
+            keranjang.harga = float(harga)
+            keranjang.image = file
+            print(f"===== {keranjang}")
+            keranjang.save()
             return redirect('daftar_keranjang')
     else:
         form = KeranjangForm()
     return render(request, 'cart/tambah_keranjang.html', {'form': form})
+
+def tambah_keranjang_sql(request):
+    if request.method == 'POST':
+        nama_barang = request.POST.get('nama_barang')
+        kuantitas =  request.POST.get('kuantitas')
+        harga = request.POST.get('harga')
+        file = request.FILES['file']
+        file_name = file.name
+        upload_response = minio_client.put_object(
+            Bucket=settings.MINIO_STORAGE_BUCKET_NAME,
+            Key=file_name,
+            Body=file,   
+            ContentType=file.content_type
+        )
+        with connection.cursor() as c:
+            c.execute(
+                """
+                insert into cart_keranjang 
+                    (nama_barang, kuantitas, harga, image)
+                values (%s, %s, %s, %s)
+                """ , [nama_barang, kuantitas, harga, file_name]
+            )
+        return redirect('daftar_keranjang')
+    form = KeranjangForm()
+    return render(request, 'cart/tambah_keranjang.html', {'form': form})
+
 
 def edit_keranjang(request, pk):
     keranjang = get_object_or_404(Keranjang, pk=pk)
